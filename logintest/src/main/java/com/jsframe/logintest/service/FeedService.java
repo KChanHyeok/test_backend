@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,5 +77,18 @@ public class FeedService {
             feedFiles.add(feedFileRepository.save(ff));
         }
         return feedFiles;
+    }
+
+    public List<Feed> FeedInquiry() {
+        log.info("FeedInquiry()");
+        Iterable<Feed> feedList = null;
+        List<Feed> newList = new ArrayList<>();
+        feedList = feedRepository.findAll();
+        for(Feed f : feedList){
+           List<FeedFile> feedFiles = feedFileRepository.findAllByFeedCode(f.getFeedNumber());
+           f.setFfList(feedFiles);
+           newList.add(f);
+        }
+        return newList;
     }
 }
