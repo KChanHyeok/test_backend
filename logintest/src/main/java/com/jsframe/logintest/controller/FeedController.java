@@ -4,10 +4,7 @@ import com.jsframe.logintest.entity.Feed;
 import com.jsframe.logintest.service.FeedService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
@@ -36,5 +33,11 @@ public class FeedController {
         log.info("FeedInquiry");
 
         return fServ.FeedInquiry();
+    }
+
+    @DeleteMapping("/deleteFeed")
+    public String deleteFeed(@RequestBody Feed feed, HttpSession session) {
+        log.info("deleteFeed()");
+        return fServ.deleteFeed(feed, session);
     }
 }
