@@ -91,4 +91,40 @@ public class FeedService {
         }
         return newList;
     }
+
+    public String deleteFeed(Feed feed, HttpSession session) {
+        String result = null;
+        log.info("deleteFeed()");
+        try{
+            deleteFeedFile(feed, session);
+            feedRepository.deleteById(feed.getFeedNumber());
+            result = "ok";
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private void deleteFeedFile(Feed feed, HttpSession session) {
+        log.info("deleteFeedFile()");
+        try {
+            List<FeedFile> feedFiles = feed.getFfList();
+            if(feedFiles.isEmpty()){
+                return;
+            }
+            feedFileRepository.deleteAllByFeedCode(feed.getFeedNumber());
+            String realPath = session.getServletContext().getRealPath("/");
+            realPath += "images/";
+
+            for (FeedFile file : feedFiles){
+                File fileToDelete = new File(realPath + file.getFeedFileSaveimg());
+                if(fileToDelete.exists()){
+                    fileToDelete.delete();
+                    log.info("파일 삭제 성공");
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }
