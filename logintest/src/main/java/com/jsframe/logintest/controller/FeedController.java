@@ -29,10 +29,10 @@ public class FeedController {
     }
 
     @GetMapping("/FeedInquiry")
-    public List<Feed> FeedInquiry(){
+    public List<Feed> FeedInquiry(@RequestParam Integer page, HttpSession session){
         log.info("FeedInquiry");
 
-        return fServ.FeedInquiry();
+        return fServ.FeedInquiry(page, session);
     }
 
     @DeleteMapping("/deleteFeed")
