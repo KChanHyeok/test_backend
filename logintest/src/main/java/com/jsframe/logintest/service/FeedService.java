@@ -6,6 +6,9 @@ import com.jsframe.logintest.repository.FeedFileRepository;
 import com.jsframe.logintest.repository.FeedRepository;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -79,11 +82,19 @@ public class FeedService {
         return feedFiles;
     }
 
-    public List<Feed> FeedInquiry() {
+    public List<Feed> FeedInquiry(Integer page, HttpSession session) {
         log.info("FeedInquiry()");
-        Iterable<Feed> feedList = null;
+
+        int listCnt = 2;
+
+        if(page==null){
+            page = 1;
+        }
+
+        Pageable feedPageable  = PageRequest.of(page -1, listCnt, Sort.Direction.DESC, "feedDate");
+        List<Feed> feedList;
         List<Feed> newList = new ArrayList<>();
-        feedList = feedRepository.findAll();
+        feedList = feedRepository.findAll(feedPageable);
         for(Feed f : feedList){
            List<FeedFile> feedFiles = feedFileRepository.findAllByFeedCode(f.getFeedNumber());
            f.setFfList(feedFiles);
